@@ -1,0 +1,25 @@
+# config port
+server:
+  port: 8080
+  servlet:
+    context-path: /identity
+
+# Config cau hinh database
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3306/identity_service"
+    username: root
+    password: root
+  # Chi dung jpa duoi day de tu dong tao table User, tuy nhien khi di lam can dua vao 1 script SQL
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+# Secret Key
+jwt:
+  signerKey: "/nvphzRqEgduNfnKy2ztU3XBeojbmK8jzDivxOxLIGnl+D5GfkjyXdLq15xz9af/\n"
+
+# Layer1 - Controller: Quan ly cac mapping, endpoint
+# Layer2 - Service: Xu ly cac logic lien quan toi subdomain
+# Layer3 - Repository: Tang tuong tac truc tiep voi DBMS
