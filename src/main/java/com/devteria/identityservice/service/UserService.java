@@ -79,6 +79,7 @@ public class UserService {
     }
 
     //User chỉ có thể lấy được thông tin của chính mình
+
     @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse getUser(String id) {
         return userMapper.toUserResponse(userRepository.findById(id)

@@ -30,6 +30,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
 
         response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
-        response.flushBuffer();
+        response.flushBuffer(); // Đảm bảo dữ liệu được gửi ngay về client
     }
 }
