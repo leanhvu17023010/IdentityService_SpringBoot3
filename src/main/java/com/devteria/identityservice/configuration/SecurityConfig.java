@@ -47,6 +47,7 @@ public class SecurityConfig {
                 oauth2.jwt(jwtConfigurer ->
                         jwtConfigurer.decoder(jwtDecoder()) // Dùng jwtDecoder để giải mã và xác minh token
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
         );
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable); // Tắt CSRF, thường làm với REST API vì không cần bảo vệ form như web app
