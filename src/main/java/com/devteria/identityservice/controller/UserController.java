@@ -42,11 +42,11 @@ public class UserController {
                 .result(userService.getUsers())
                 .build();
     }
-
-    @GetMapping("/{userId}")
-    ApiResponse<UserResponse> getUser(@PathVariable String userId) {
+    // Lấy ra thông tin của bản thân mà ko cần truyền vào id(Chỉ cần truyền vào token)
+    @GetMapping("/myInfo")
+    ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.getUser(userId))
+                .result(userService.getMyInfo())
                 .build();
     }
 

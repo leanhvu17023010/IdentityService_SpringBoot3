@@ -1,3 +1,4 @@
+
 package com.devteria.identityservice.repository;
 
 import com.devteria.identityservice.entity.User;
