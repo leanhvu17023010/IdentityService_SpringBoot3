@@ -19,7 +19,16 @@ spring:
 # Secret Key
 jwt:
   signerKey: "/nvphzRqEgduNfnKy2ztU3XBeojbmK8jzDivxOxLIGnl+D5GfkjyXdLq15xz9af/\n"
+  # tuổi thọ Access Token
+  valid-duration: 3600 # in second
+  # tuổi thọ Refresh Token (hay chính xác hơn là khoảng thời gian được phép refresh)
+  refreshable-duration: 360000 # in seconds
+
+
+
 
 # Layer1 - Controller: Quan ly cac mapping, endpoint
 # Layer2 - Service: Xu ly cac logic lien quan toi subdomain
 # Layer3 - Repository: Tang tuong tac truc tiep voi DBMS
+
+

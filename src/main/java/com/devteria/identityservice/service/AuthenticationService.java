@@ -40,6 +40,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+
+
+
 public class AuthenticationService {
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
@@ -48,12 +51,20 @@ public class AuthenticationService {
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
 
+    @NonFinal
+    @Value("${jwt.valid-duration}")
+    protected long VALIDATION_DURATION;
+
+    @NonFinal
+    @Value("${jwt.refreshable-duration}")
+    protected long REFRESHABLE_DURATION;
+
     public IntrospectResponse introspect(IntrospectRequest request)
             throws JOSEException, ParseException {
         var token = request.getToken();
         boolean isValid = true;
         try{
-            verifyToken(token);
+            verifyToken(token,false);
         }catch (AppException e){
             isValid = false;
         }
@@ -83,24 +94,29 @@ public class AuthenticationService {
     }
 
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
+        try {
+            var signToken = verifyToken(request.getToken(), true);
 
-        var signToken = verifyToken(request.getToken());
+            String jit = signToken.getJWTClaimsSet().getJWTID();
+            Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
 
-        String jit = signToken.getJWTClaimsSet().getJWTID();
-        Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+            InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                    .id(jit)
+                    .expiryTime(expiryTime)
+                    .build();
 
-        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-                .id(jit)
-                .expiryTime(expiryTime)
-                .build();
+            invalidatedTokenRepository.save(invalidatedToken);
 
-        invalidatedTokenRepository.save(invalidatedToken);
+        }catch (AppException e){
+            log.info("Token already expired");
+        }
+
     }
 
     public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
         // Kiểm tra hiệu lực token
 
-        var signJWT =  verifyToken(request.getToken());
+        var signJWT =  verifyToken(request.getToken(),true);
 
         var jit = signJWT.getJWTClaimsSet().getJWTID();
         Date expiryTime = signJWT.getJWTClaimsSet().getExpirationTime();
@@ -128,7 +144,7 @@ public class AuthenticationService {
 
     }
 
-    private SignedJWT verifyToken(String token)throws JOSEException, ParseException {
+    private SignedJWT verifyToken(String token, boolean isRefresh)throws JOSEException, ParseException {
 
         // verify token
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
@@ -136,7 +152,10 @@ public class AuthenticationService {
         SignedJWT signedJWT = SignedJWT.parse(token);
 
         // Kiểm tra hết hạn token
-        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        Date expiryTime = (isRefresh)
+                ? new Date(signedJWT.getJWTClaimsSet().getIssueTime()
+                    .toInstant().plus(REFRESHABLE_DURATION,ChronoUnit.SECONDS).toEpochMilli())
+                : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         var verified = signedJWT.verify(verifier);
 
@@ -165,7 +184,7 @@ public class AuthenticationService {
                 .issuer("devteria.com") // Định danh ai là người issuer này được issuer từ ai, thường là issue
                 .issueTime(new Date())  // Thời gian issue
                 .expirationTime(new Date(
-                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
+                        Instant.now().plus(VALIDATION_DURATION, ChronoUnit.SECONDS).toEpochMilli()
                 ))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
