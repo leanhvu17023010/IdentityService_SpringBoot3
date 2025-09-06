@@ -1,5 +1,6 @@
 package com.devteria.identityservice.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,11 +27,12 @@ public class SecurityConfig {
     // API không cần xác thực (ai cũng có thể gọi được).
     private final String[] PUBLIC_ENDPOINTS = {
             "/users",
-            "/auth/token", "/auth/introspect"
+            "/auth/token", "/auth/introspect" , "/auth/logout"
     };
 
-    @Value("${jwt.signerKey}")
-    private String signerKey;
+    @Autowired
+    private CustomJwtDecoder  customJwtDecoder;
+
 
     // Cấu hình security: Quản lý quyền truy cập endpoint
     @Bean
@@ -45,7 +47,7 @@ public class SecurityConfig {
         // Bật chế độ resource server theo chuẩn OAuth2, xác thực request bằng JWT
         httpSecurity.oauth2ResourceServer(oauth2 ->
                 oauth2.jwt(jwtConfigurer ->
-                        jwtConfigurer.decoder(jwtDecoder()) // Dùng jwtDecoder để giải mã và xác minh token
+                        jwtConfigurer.decoder(customJwtDecoder) // Dùng jwtDecoder để giải mã và xác minh token
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
         );
@@ -67,15 +69,7 @@ public class SecurityConfig {
         return jwtAuthenticationConverter;
     }
 
-    @Bean
-    JwtDecoder jwtDecoder() {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
 
-        return NimbusJwtDecoder
-                .withSecretKey(secretKeySpec)
-                .macAlgorithm(MacAlgorithm.HS512)
-                .build();
-    }
 
     // Mã hóa mật khẩu
     @Bean
