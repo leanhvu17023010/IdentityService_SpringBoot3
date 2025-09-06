@@ -27,7 +27,7 @@ public class SecurityConfig {
     // API không cần xác thực (ai cũng có thể gọi được).
     private final String[] PUBLIC_ENDPOINTS = {
             "/users",
-            "/auth/token", "/auth/introspect" , "/auth/logout"
+            "/auth/token", "/auth/introspect" , "/auth/logout","/auth/refresh"
     };
 
     @Autowired

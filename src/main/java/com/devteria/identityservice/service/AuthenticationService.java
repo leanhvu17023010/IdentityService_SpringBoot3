@@ -3,6 +3,7 @@ package com.devteria.identityservice.service;
 import com.devteria.identityservice.dto.request.AuthenticationRequest;
 import com.devteria.identityservice.dto.request.IntrospectRequest;
 import com.devteria.identityservice.dto.request.LogoutRequest;
+import com.devteria.identityservice.dto.request.RefreshRequest;
 import com.devteria.identityservice.dto.response.AuthenticationResponse;
 import com.devteria.identityservice.dto.response.IntrospectResponse;
 import com.devteria.identityservice.entity.InvalidatedToken;
@@ -96,6 +97,37 @@ public class AuthenticationService {
         invalidatedTokenRepository.save(invalidatedToken);
     }
 
+    public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
+        // Kiểm tra hiệu lực token
+
+        var signJWT =  verifyToken(request.getToken());
+
+        var jit = signJWT.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signJWT.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jit)
+                .expiryTime(expiryTime)
+                .build();
+
+
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        var username = signJWT.getJWTClaimsSet().getSubject();
+
+        var user = userRepository.findByUsername(username).orElseThrow(
+                () -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+        var token = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .authenticated(true)
+                .build();
+
+
+    }
+
     private SignedJWT verifyToken(String token)throws JOSEException, ParseException {
 
         // verify token
@@ -118,6 +150,9 @@ public class AuthenticationService {
 
         return  signedJWT;
     }
+
+
+
 
 
     private String generateToken(User user) {
