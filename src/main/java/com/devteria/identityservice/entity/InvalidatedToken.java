@@ -1,11 +1,12 @@
 package com.devteria.identityservice.entity;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Date;
 
 @Getter
 @Setter
@@ -14,8 +15,9 @@ import java.util.Date;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class InvalidatedToken  {
+public class InvalidatedToken {
     @Id
     String id;
+
     Date expiryTime; // thời gian expire(hết hạn) của token
 }

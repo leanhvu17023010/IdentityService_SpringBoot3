@@ -10,10 +10,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)  // Những field nào null sẽ k kèm vào trong json
+@JsonInclude(JsonInclude.Include.NON_NULL) // Những field nào null sẽ k kèm vào trong json
 public class ApiResponse<T> {
     @Builder.Default
     int code = 1000;
+
     String message;
     T result;
 }

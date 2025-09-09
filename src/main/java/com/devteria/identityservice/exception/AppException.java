@@ -6,7 +6,7 @@ public class AppException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    private  ErrorCode errorCode;
+    private ErrorCode errorCode;
 
     public ErrorCode getErrorCode() {
         return errorCode;
