@@ -76,6 +76,7 @@ public class UserService {
     public void deleteUser(String userId) {
 
         userRepository.deleteById(userId);
+
     }
     // PreAuthorize : admin có thể lấy được thông tin của tất cả user
     @PreAuthorize("hasRole('ADMIN')")
