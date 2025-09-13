@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserControllerInergartionTest {
 
     @Container
-    static final MySQLContainer<?> MY_SQL_CONTAINER = new MySQLContainer<>("mysql:8.0.36");
+    static final MySQLContainer<?> MY_SQL_CONTAINER = new MySQLContainer<>("mysql:8.0");
 
     @DynamicPropertySource
     static void configureDatasource(DynamicPropertyRegistry registry) {

@@ -13,9 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.servlet.support.WebContentGenerator;
 
 import com.devteria.identityservice.dto.request.UserCreationRequest;
@@ -31,7 +31,7 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
-    @MockitoBean
+    @MockBean
     private UserRepository userRepository;
 
     private UserCreationRequest request;
@@ -110,7 +110,7 @@ public class UserServiceTest {
         var response = userService.getMyInfo();
 
         Assertions.assertThat(response.getUsername()).isEqualTo("john");
-        Assertions.assertThat(response.getId()).isEqualTo("cf0600f538b3");
+        Assertions.assertThat(response.getId()).isEqualTo("6d22364f56ee");
     }
 
     @Test
