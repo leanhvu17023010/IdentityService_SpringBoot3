@@ -1,0 +1,19 @@
+# Secret Key
+jwt:
+#  signerKey: "LfoF+PBlr6XAs+kGeMZ6gTqF5Se5/3PQZJ72VtoHNeUSrtEOmtq0FaEDNDmpS3M7"
+  # tuổi thọ Access Token
+  valid-duration: 7200 # in second
+  # tuổi thọ Refresh Token (hay chính xác hơn là khoảng thời gian được phép refresh)
+  refreshable-duration: 72000 # in seconds
+
+
+
+
+
+
+
+# Layer1 - Controller: Quan ly cac mapping, endpoint
+# Layer2 - Service: Xu ly cac logic lien quan toi subdomain
+# Layer3 - Repository: Tang tuong tac truc tiep voi DBMS
+
+

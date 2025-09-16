@@ -3,8 +3,6 @@ package com.devteria.identityservice.service;
 import java.util.HashSet;
 import java.util.List;
 
-import com.devteria.identityservice.constant.PredefinedRole;
-import com.devteria.identityservice.entity.Role;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,9 +10,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.devteria.identityservice.constant.PredefinedRole;
 import com.devteria.identityservice.dto.request.UserCreationRequest;
 import com.devteria.identityservice.dto.request.UserUpdateRequest;
 import com.devteria.identityservice.dto.response.UserResponse;
+import com.devteria.identityservice.entity.Role;
 import com.devteria.identityservice.entity.User;
 import com.devteria.identityservice.exception.AppException;
 import com.devteria.identityservice.exception.ErrorCode;
@@ -41,9 +41,9 @@ public class UserService {
     public UserResponse createUser(UserCreationRequest request) {
         log.info("Service: create User");
 
-//        if (userRepository.existsByUsername(request.getUsername())) {
-//            throw new AppException(ErrorCode.USER_EXISTED);
-//        }
+        //        if (userRepository.existsByUsername(request.getUsername())) {
+        //            throw new AppException(ErrorCode.USER_EXISTED);
+        //        }
 
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -53,8 +53,7 @@ public class UserService {
         user.setRoles(roles);
         try {
             user = userRepository.save(user);
-        }
-        catch (DataIntegrityViolationException exception) {
+        } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
         return userMapper.toUserResponse(userRepository.save(user));

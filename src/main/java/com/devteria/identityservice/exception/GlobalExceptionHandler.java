@@ -43,9 +43,7 @@ public class GlobalExceptionHandler {
         apiResponse.setMessage(errorCode.getMessage());
 
         // Khi trả về thường kèm với 1 http code, thường lỗi từ người dùng sẽ trả về lỗi 400(badRequest)
-        return ResponseEntity.status(errorCode.getStatusCode())
-                .body(apiResponse);
-
+        return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
 
     @ExceptionHandler(value = AccessDeniedException.class)

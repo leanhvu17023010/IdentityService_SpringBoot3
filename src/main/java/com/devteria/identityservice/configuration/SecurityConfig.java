@@ -16,9 +16,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 
 @Configuration
 @EnableWebSecurity
@@ -56,10 +53,9 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
-
     @Bean
     public CorsFilter corsFilter() {
-        CorsConfiguration  corsConfiguration = new CorsConfiguration();
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
 
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.addAllowedOriginPattern("http://localhost:3000");

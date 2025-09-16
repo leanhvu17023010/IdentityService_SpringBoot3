@@ -7,10 +7,11 @@ server:
 # Config cau hinh database
 spring:
   datasource:
-    url: "jdbc:mysql://localhost:3306/identity_service"
+#    url: ${DBMS_CONNECTION:jdbc:mysql://localhost:3306/identity_service}
+    url: ${DBMS_CONNECTION:jdbc:mysql://172.17.0.2:3306/identity_service}
     driverClassName: "com.mysql.cj.jdbc.Driver"
-    username: root
-    password: root
+    username: ${DBMS_USERNAME:root}
+    password: ${DBMS_PASSWORD:root}
   # Chi dung jpa duoi day de tu dong tao table User, tuy nhien khi di lam can dua vao 1 script SQL
   jpa:
     hibernate:

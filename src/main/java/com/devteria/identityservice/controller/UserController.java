@@ -48,7 +48,7 @@ public class UserController {
                 .build();
     }
     // Lấy ra thông tin của bản thân mà ko cần truyền vào id(Chỉ cần truyền vào token)
-    @GetMapping("/myInfo")
+    @GetMapping("/my-info")
     ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getMyInfo())
